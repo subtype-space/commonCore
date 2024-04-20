@@ -7,13 +7,11 @@
 
 function comphash() {
     if ! command -v md5sum &> /dev/null; then
-        echo "md5sum not installed."
-        exit 1
+        error "md5sum not installed."
     fi
 
     if [ $# -lt 2 ]; then
-        echo "Must pass in at least two arguments."
-        exit 1
+        error "Must pass in at least two arguments."
     else
         # Run bash
         [[ "$(md5sum ${1} | awk '{print $1}')" = "$(md5sum ${2} | awk '{print $1}')" ]] && return 0 || return 1
