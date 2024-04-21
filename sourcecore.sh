@@ -4,15 +4,22 @@
 # @_subtype / subtype / 2023
 # This script sources the _subtype common core bash library
 
+# If this script is interrupted, just return the user to the pwd they were in
 INITDIR=$(pwd)
-trap "cd $INITDIR" EXIT
+trap "cleanup; cd $INITDIR" EXIT
+
+# "Verbose" mode
 VERBOSE=false
+
 # Get directory where this file is currently
 SCRIPTPATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 cd $SCRIPTPATH
 
+# Check for updates, don't do any auto update, let the user perform it.
 function checkUpdate() {
-
+  if $VERBOSE; then
+    echo "Checking for updates..."
+  fi
   UPSTREAM=${1:-'@{u}'}
   LOCAL=$(git rev-parse @)
   REMOTE=$(git rev-parse "$UPSTREAM")
@@ -26,7 +33,6 @@ function checkUpdate() {
 
 # main function
 function main() {
-  #checkUpdate
   if [ ! -d $SCRIPTPATH/bash ]; then
       echo "_subtype Common Core bash library not found or malformed."
   fi
@@ -42,6 +48,15 @@ function main() {
   else
       echo "Bash utils directory not found for sourcing."
   fi
+}
+
+function cleanup() {
+  unset VERBOSE
+  unset SCRIPTPATH
+  unset UPSTREAM
+  unset LOCAL
+  unset REMOTE
+  unset BASE
 }
 
 while getopts "v" OPTS; do

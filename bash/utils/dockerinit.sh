@@ -5,43 +5,10 @@
 # This script will create a Dockerfile, an optional docker-compose.yml, and a couple of utility shell scripts to aid
 # Let's be honest, if you're familiar with Docker, you probably won't even need these scripts. These scripts may help those who want to 'standardize' a toolchain or process.
 
-# Generate dummy build script
-# TODO: Add proper tags
-function createBuildScripts() {
-  info "Creating your build scripts"
-  cat << 'EOF' > ./build.sh
-#!/bin/bash
-# Shell script to build image
-docker compose build
-EOF
-
-  chmod 755 ./build.sh
-}
-
-function createDockerComposeUtils() {
-  info "Creating your docker-compose utility scripts"
-  cat << 'EOF' > ./buildandrestart.sh
-#!/bin/bash
-# Shell script to run a docker compose build, then restarts your stack, detatched
-docker compose build && ok "Build successful" && docker compose down && docker compose up -d && info "Stack restarted"
-EOF
-  chmod 755 ./buildandrestart.sh
-
-  info "Creating restart script"
-  cat << 'EOF' > ./restart.sh
-#!/bin/bash
-# Shell script to restart the services defined in the respective compose file
-docker compose down && docker compose up -d && info "Container(s) restarted"
-EOF
-
-  chmod 755 ./restart.sh
-}
-
 function createDockerCompose() {
-  info "Initializing a Docker project in this directory"
   # Don't overwrite an existing compose file
   if [ -f ./docker-compose.yml ]; then
-    info "A compose file already exists"
+    ok "A compose file already exists"
   else
     info "Creating docker-compose.yml"
     cat > ./docker-compose.yml << EOT
@@ -63,7 +30,10 @@ EOT
 # Main function
 # quick and dirty
 function dockerinit() {
-  if [ ! -f ./Dockerfile ]; then
+  if [ -f ./Dockerfile ]; then
+    ok "A Dockerfile already exists"
+  else  
+    info "Creating Dockerfile"
     touch Dockerfile
   fi
 
@@ -79,8 +49,6 @@ function dockerinit() {
     CONTAINER_NAME="<container name>"
   fi
   createDockerCompose
-  createDockerComposeUtils
-  createBuildScripts
 }
 
 
