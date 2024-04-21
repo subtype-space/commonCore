@@ -14,7 +14,7 @@ BFR='\\r\\033[K'
 # TODO: For writing to file, allow disabling of TTY coloring to declutter
 # General info
 function info() {
-    echo -ne "[ INFO ] $1"
+    echo -e "[ INFO ] $1"
 }
 
 function ok() {
@@ -26,13 +26,13 @@ function warn() {
     echo -e "[ ${YELLOW}WARN${NORM} ] $1"
 }
 
-# General fatal, returns RC 1
+# General fatal message. Will exit and return 1
 function fatal() {
     echo -e "[ ${RED}FAIL${NORM} ] $1"
     exit 1
 }
 
-# General error, returns RC of 2
+# General error
 function error() {
     echo -e "[ ${RED}FAIL${NORM} ] $1"
     return 1
