@@ -8,6 +8,10 @@
 # INITDIR=$(pwd)
 # trap "cd $INITDIR" EXIT
 
+SCRIPTPATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && cd .. && pwd )"
+source $SCRIPTPATH/utils/logging.sh
+source $SCRIPTPATH/utils/dockerinit.sh
+
 function usage() {
   echo "usage: dutil [reload|rebuild|networks|ps|psg] [container name]"
   echo -e "  net|network|networks\n\t\t Returns the list of docker networks"
@@ -17,11 +21,6 @@ function usage() {
   echo -e "  shell\n\t\t Runs docker exec -it against a given container name and opens a bash shell (as fallback, use /bin/sh)."
   echo "Part of the _subtype common library"
   return 2
-}
-
-# Pass onto dutil
-function dutils() {
-  dutil "$@"
 }
 
 # Main utility function
@@ -89,3 +88,6 @@ function dutil() {
       ;;
   esac
 }
+
+# Disable this stuff
+# dutil "$@" ## HMMMMMMM Need to fix this????? How can I source the common library? Do I install the common lib utils to user space?
