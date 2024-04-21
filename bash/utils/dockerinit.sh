@@ -38,6 +38,7 @@ EOF
 }
 
 function createDockerCompose() {
+  info "Initializing a Docker project in this directory"
   # Don't overwrite an existing compose file
   if [ -f ./docker-compose.yml ]; then
     info "A compose file already exists"
@@ -61,7 +62,7 @@ EOT
 
 # Main function
 # quick and dirty
-function initdocker() {
+function dockerinit() {
   if [ ! -f ./Dockerfile ]; then
     touch Dockerfile
   fi
