@@ -84,6 +84,8 @@ function dutil() {
         docker ps -a | grep $2
       fi
       ;;
+    
+    
     rebuild)
       #TODO: See if compose file has a build context?
       docker compose down && docker compose build . && docker compose up -d
@@ -93,6 +95,7 @@ function dutil() {
       ;;
     shell)
       if [ -z $2 ]; then
+        error "Missing container name"
         usage
       else
         if docker exec $2 /bin/bash > /dev/null 2>&1; then
@@ -106,6 +109,9 @@ function dutil() {
           return 1
         fi
       fi
+      ;;
+    upgrade)
+      docker compose down && docker compose pull && docker compose up -d && ok "Complete"
       ;;
     *)
       usage

@@ -1,3 +1,8 @@
+#!/bin/bash
+# Author: Andrew Subowo
+# Some helper functions for the installation
+# @_subtype / subtype / 2024
+
 function CHECK_COMMANDS() {
     for COMMAND in "$@"; do
         if ! command -v $COMMAND > /dev/null; then

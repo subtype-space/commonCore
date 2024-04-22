@@ -19,14 +19,20 @@ source ../../utils/logging.sh
 echo "Testing file comparison, shell, empty"
 if comphash ./test1.txt ./test2.txt; then
     ok
+else
+    fail
 fi
 
 echo "Testing file comparison, shell, differing"
 if ! comphash ./test1.txt ./test3.txt; then
     ok
+else
+    fail
 fi
 
 echo "Testing two files with different extensions"
 if comphash ./test1.txt ./test4.sh; then
     ok
+else
+    fail
 fi
