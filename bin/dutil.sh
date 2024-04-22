@@ -1,4 +1,4 @@
-  #!/bin/bash -
+#!/bin/bash
 # Author: Andrew Subowo
 # docker compose based utils -- these can be translated into aliases
 # @_subtype / subtype / 2024
@@ -20,30 +20,34 @@ function usage() {
   exit 1
 }
 
+# TODO: EVENTUALLY MAKE THIS COMPLETELY STANDALONE(?) Should be able to detect if core is installed or not
 # Check and source some methods that are included as part of the common core
 function checkAndSourceCommonCore() {
 
   # Might get rid of this. Let the user have control.
-  if [ ! -h $0 ]; then
-    echo "dutil doesn't seem to be installed as a symbolic link. Please use the provided installer."
-    exit 1
-  fi
+  # if [ ! -h $0 ]; then
+  #   echo "dutil doesn't seem to be referenced as a symbolic link. Please link $0 to dutil in the library or use the provided installer."
+  #   exit 1
+  # fi
 
   # If the installer was used, the common library should be symlinked/available
-  COMMON_CORE_INSTALL="$( cd $( dirname "$(readlink -f "$0")") && cd ../.. && pwd)"
+  COMMON_CORE_INSTALL="$( cd $(dirname $(dirname "$(readlink -f "$0")"))  && pwd)"
   if [ ! -d $COMMON_CORE_INSTALL ]; then
-    echo "Could not locate the common core utils library at $COMMON_CORE_INSTALL"
+    echo "Could not locate the common core library at $COMMON_CORE_INSTALL. Please consider re-pulling the repository"
     exit 1
   else
-    . $COMMON_CORE_INSTALL/sourcecore.sh
+    source $COMMON_CORE_INSTALL/utils/logging.sh
+    source $COMMON_CORE_INSTALL/utils/corefunc.sh
+    source $COMMON_CORE_INSTALL/utils/dockerinit.sh
   fi
 }
 
 # Main utility function
 function dutil() {
+  # Get current pwd
   checkAndSourceCommonCore
-  CHECK_COMMANDS dockerinit
-
+  CHECK_COMMANDS dockerinit warn ok error
+  
   if [ -z $1 ]; then
     usage
   fi
@@ -92,12 +96,14 @@ function dutil() {
         usage
       else
         if docker exec $2 /bin/bash > /dev/null 2>&1; then
+          ok "Starting /bin/bash in $2"
           docker exec -it $2 /bin/bash
         elif docker exec $2 /bin/sh > /dev/null 2>&1; then
           warn "$2 does not support /bin/bash, using /bin/sh"
           docker exec -it $2 /bin/sh
         else
           error "Unable to spawn shell session for $2"
+          return 1
         fi
       fi
       ;;

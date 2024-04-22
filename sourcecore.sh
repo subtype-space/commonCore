@@ -31,15 +31,6 @@ function CCQUIT() {
   fi
 }
 
-function CHECK_COMMANDS() {
-    for COMMAND in "$@"; do
-        if ! command -v $COMMAND > /dev/null; then
-            echo "$COMMAND: command not found. Was the _subtype common library properly sourced?"
-            exit 1
-        fi
-    done
-}
-
 # Check for updates, don't do any auto update, let the user perform it.
 function checkUpdate() {
   if $VERBOSE; then
@@ -62,8 +53,8 @@ function main() {
       echo "_subtype Common Core bash library not found or malformed."
   fi
 
-  if [ -d $SCRIPTPATH/bash/utils ]; then
-    for FILE in $SCRIPTPATH/bash/utils/*; do
+  if [ -d $SCRIPTPATH/utils ]; then
+    for FILE in $SCRIPTPATH/utils/*; do
       # Source files in the current shell, not a sub-shell
       . "$FILE"
       if $VERBOSE; then
