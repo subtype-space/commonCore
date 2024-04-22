@@ -15,6 +15,31 @@ VERBOSE=false
 SCRIPTPATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 cd $SCRIPTPATH
 
+function CCQUIT() {
+  if [ $# -eq 0 ]; then
+    RC=1 #Default fail state
+  else
+    RC=$1
+  fi
+
+  if [[ "${BASH_SOURCE[0]}" != "${0}" ]]; then
+    # Sourced
+    return $RC
+  else
+    # Not sourced, possibly running in sub-shell
+    exit $RC
+  fi
+}
+
+function CHECK_COMMANDS() {
+    for COMMAND in "$@"; do
+        if ! command -v $COMMAND > /dev/null; then
+            echo "$COMMAND: command not found. Was the _subtype common library properly sourced?"
+            exit 1
+        fi
+    done
+}
+
 # Check for updates, don't do any auto update, let the user perform it.
 function checkUpdate() {
   if $VERBOSE; then
@@ -38,15 +63,15 @@ function main() {
   fi
 
   if [ -d $SCRIPTPATH/bash/utils ]; then
-      for FILE in $SCRIPTPATH/bash/utils/*; do
-          # Source files in the current shell, not a sub-shell
-          . "$FILE"
-          if $VERBOSE; then
-            echo "Sourced $FILE"
-          fi
-      done
+    for FILE in $SCRIPTPATH/bash/utils/*; do
+      # Source files in the current shell, not a sub-shell
+      . "$FILE"
+      if $VERBOSE; then
+        echo "Sourced $FILE"
+      fi
+    done
   else
-      echo "Bash utils directory not found for sourcing."
+    echo "Bash utils directory not found for sourcing."
   fi
 }
 

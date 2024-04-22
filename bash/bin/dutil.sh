@@ -1,4 +1,4 @@
-#!/bin/bash -
+  #!/bin/bash -
 # Author: Andrew Subowo
 # docker compose based utils -- these can be translated into aliases
 # @_subtype / subtype / 2024
@@ -8,9 +8,6 @@
 # INITDIR=$(pwd)
 # trap "cd $INITDIR" EXIT
 
-SCRIPTPATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && cd .. && pwd )"
-source $SCRIPTPATH/utils/logging.sh
-source $SCRIPTPATH/utils/dockerinit.sh
 
 function usage() {
   echo "usage: dutil [reload|rebuild|networks|ps|psg] [container name]"
@@ -20,28 +17,49 @@ function usage() {
   echo -e "  reload\n\t\t Performs a docker compose down and up, detatched"
   echo -e "  shell\n\t\t Runs docker exec -it against a given container name and opens a bash shell (as fallback, use /bin/sh)."
   echo "Part of the _subtype common library"
-  return 2
+  exit 1
+}
+
+# Check and source some methods that are included as part of the common core
+function checkAndSourceCommonCore() {
+
+  # Might get rid of this. Let the user have control.
+  if [ ! -h $0 ]; then
+    echo "dutil doesn't seem to be installed as a symbolic link. Please use the provided installer."
+    exit 1
+  fi
+
+  # If the installer was used, the common library should be symlinked/available
+  COMMON_CORE_INSTALL="$( cd $( dirname "$(readlink -f "$0")") && cd ../.. && pwd)"
+  if [ ! -d $COMMON_CORE_INSTALL ]; then
+    echo "Could not locate the common core utils library at $COMMON_CORE_INSTALL"
+    exit 1
+  else
+    . $COMMON_CORE_INSTALL/sourcecore.sh
+  fi
 }
 
 # Main utility function
 function dutil() {
+  checkAndSourceCommonCore
+  CHECK_COMMANDS dockerinit
+
   if [ -z $1 ]; then
     usage
-    return 2
   fi
 
   # TODO: Add v1 support, maybe.
   if ! docker compose version &> /dev/null; then
-    error "Docker compose v2 is not installed"
+    echo "Docker compose v2 is not installed"
     return 1
   fi
 
   case $1 in
     init)
       if ! command -v dockerinit; then
-        error "dockerinit not found. Was the common library sourced correctly?"
+        echo "dockerinit is not present"
         return 1
-      else 
+      else
         dockerinit
       fi
       ;;
@@ -71,7 +89,7 @@ function dutil() {
       ;;
     shell)
       if [ -z $2 ]; then
-        error "A container name must be specified: dutil shell [container name]"
+        usage
       else
         if docker exec $2 /bin/bash > /dev/null 2>&1; then
           docker exec -it $2 /bin/bash
@@ -89,5 +107,4 @@ function dutil() {
   esac
 }
 
-# Disable this stuff
-# dutil "$@" ## HMMMMMMM Need to fix this????? How can I source the common library? Do I install the common lib utils to user space?
+dutil "$@"
