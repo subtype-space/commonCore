@@ -11,10 +11,11 @@ echo "Installing docker utilities"
 SCRIPTPATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 ln -sf $SCRIPTPATH/bin/dutil.sh /usr/local/bin/dutil && echo "Installed as dutil" || echo "There was an error creating the symlink" && exit 1
 
-echo "Running aliases"
+# Not going to fix this right now
+# echo "Running aliases"
 
-if [[ -x $SCRIPTPATH/setupshell.sh ]]; then
-    ./$SCRIPTPATH/setupshell.sh
-else
-    echo "Couldn't find the setupshell script, or the file isn't executable"
-fi
+# if [[ -x $SCRIPTPATH/setupshell.sh ]]; then
+#     . $SCRIPTPATH/setupshell.sh
+# else
+#     echo "Couldn't find the setupshell script, or the file isn't executable"
+# fi

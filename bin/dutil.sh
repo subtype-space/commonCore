@@ -1,6 +1,7 @@
 #!/bin/bash
 # Author: Andrew Subowo
 # docker compose based utils -- these can be translated into aliases. It's not that fancy.
+# These are things that I somewhat do on a more frequent basis.
 # @_subtype / subtype / 2024
 
 # TODO: Figure out how to determine if this was called via source or not or blah blah blah
