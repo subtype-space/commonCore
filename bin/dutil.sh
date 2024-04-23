@@ -60,7 +60,7 @@ function dutil() {
 
   case $1 in
     init)
-      if ! command -v dockerinit; then
+      if ! command -v dockerinit &> /dev/null; then
         echo "dockerinit is not present"
         return 1
       else
@@ -83,9 +83,7 @@ function dutil() {
       else
         docker ps -a | grep $2
       fi
-      ;;
-    
-    
+      ;;    
     rebuild)
       #TODO: See if compose file has a build context?
       docker compose down && docker compose build . && docker compose up -d
