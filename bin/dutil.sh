@@ -1,6 +1,6 @@
 #!/bin/bash
 # Author: Andrew Subowo
-# docker compose based utils -- these can be translated into aliases
+# docker compose based utils -- these can be translated into aliases. It's not that fancy.
 # @_subtype / subtype / 2024
 
 # TODO: Figure out how to determine if this was called via source or not or blah blah blah
@@ -17,19 +17,13 @@ function usage() {
   echo -e "  reload\n\t\t Performs a docker compose down and up, detatched"
   echo -e "  shell\n\t\t Runs docker exec -it against a given container name and opens a bash shell (as fallback, use /bin/sh)."
   echo "Part of the _subtype common library"
-  exit 1
+  exit 2
 }
 
 # TODO: EVENTUALLY MAKE THIS COMPLETELY STANDALONE(?) Should be able to detect if core is installed or not
+# Shouldn't have to enforce utilization of the common core, but eh
 # Check and source some methods that are included as part of the common core
 function checkAndSourceCommonCore() {
-
-  # Might get rid of this. Let the user have control.
-  # if [ ! -h $0 ]; then
-  #   echo "dutil doesn't seem to be referenced as a symbolic link. Please link $0 to dutil in the library or use the provided installer."
-  #   exit 1
-  # fi
-
   # If the installer was used, the common library should be symlinked/available
   COMMON_CORE_INSTALL="$( cd $(dirname $(dirname "$(readlink -f "$0")"))  && pwd)"
   if [ ! -d $COMMON_CORE_INSTALL ]; then
