@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # commonCoreSh
 A collection of Bash scripts/utilities that one can source in their own bash scripts. This feature set is currently UNSTABLE and is not recommended for use in production.
 
@@ -24,7 +23,3 @@ If you're intimately familiar with Docker, you probably won't need to use the ba
 
 ## logging
 Sourcing the library will let you utilize a couple logging notations in your scripts
-=======
-# commonCore
-A collection of Bash scripts/utilities that one can source in their own bash scripts.
->>>>>>> main

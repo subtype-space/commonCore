@@ -8,7 +8,7 @@
 function createDockerCompose() {
   # Don't overwrite an existing compose file
   if [ -f ./docker-compose.yml ]; then
-    ok "A compose file already exists"
+    ok "A compose file already exists in this location."
   else
     info "Creating docker-compose.yml"
     cat > ./docker-compose.yml << EOT
@@ -31,7 +31,7 @@ EOT
 # quick and dirty
 function dockerinit() {
   if [ -f ./Dockerfile ]; then
-    ok "A Dockerfile already exists"
+    ok "A Dockerfile already exists in this location."
   else  
     info "Creating Dockerfile"
     touch Dockerfile

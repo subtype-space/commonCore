@@ -38,6 +38,7 @@ function checkAndSourceCommonCore() {
 }
 
 # Main utility function
+# Wrap it all into a function in case someone somehow partially downloads the file
 function dutil() {
   # Get current pwd
   checkAndSourceCommonCore
@@ -84,12 +85,16 @@ function dutil() {
       docker compose down && docker compose build . && docker compose up -d
       ;;
     reload)
-      docker compose down && docker compose up -d
+      if [ ! -z $2 ]; then #docker compose up and down a given service
+        docker compose -f $2 down && docker compose -f $2 up -d
+      else
+        docker compose down && docker compose up -d
+      fi
       ;;
     shell)
       if [ -z $2 ]; then
-        error "Missing container name"
         usage
+        error "Missing container name"
       else
         if docker exec $2 /bin/bash > /dev/null 2>&1; then
           ok "Starting /bin/bash in $2"

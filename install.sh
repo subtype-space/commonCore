@@ -6,10 +6,11 @@
 
 # Install dutil via a symlink to ./bin/dutil.sh is here. That way we can also sorta kinda maybe import the other helper utils
 echo "Installing docker utilities"
+echo "Creating 'dutil' symlink under /usr/local/bin"
 ## TODO: Check for updates?
 # Get directory where this file is currently
 SCRIPTPATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
-ln -sf $SCRIPTPATH/bin/dutil.sh /usr/local/bin/dutil && echo "Installed as dutil" || echo "There was an error creating the symlink" && exit 1
+ln -sf $SCRIPTPATH/bin/dutil.sh /usr/local/bin/dutil && echo "Installed as dutil under /usr/local/bin/dutil" || echo "There was an error creating the symlink" && exit 1
 
 # Not going to fix this right now
 # echo "Running aliases"
