@@ -6,16 +6,15 @@
 # This script allows one to quickly compare the md5sum of two files together
 
 function comphash() {
-    if ! command -v md5sum &> /dev/null; then
-        echo "md5sum not installed."
-        exit 1
-    fi
+  if ! command -v md5sum &> /dev/null; then
+    error "md5sum not installed."
+    set +o pipefail
+    return 1
+  fi
 
-    if [ $# -lt 2 ]; then
-        echo "Must pass in at least two arguments."
-        exit 1
-    else
-        # Run bash
-        [[ "$(md5sum ${1} | awk '{print $1}')" = "$(md5sum ${2} | awk '{print $1}')" ]] && return 0 || return 1
-    fi
+  if [ $# -lt 2 ] || [ $# -gt 2 ]; then
+    error "Must pass in two arguments."
+  else
+    [[ "$(md5sum ${1} ${2} | awk '{print $1}' | uniq | wc -l)" == 1 ]] && return 0 || return 1
+  fi
 }
